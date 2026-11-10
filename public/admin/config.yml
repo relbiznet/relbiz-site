@@ -235,7 +235,6 @@ collections:
             widget: object
             fields:
               - { label: 'Google Analytics 4 Measurement ID (G-…)', name: ga4, widget: string, required: false }
-              - { label: Yandex Metrica counter number, name: yandexMetrika, widget: string, required: false }
           - label: Forms
             name: forms
             widget: object
