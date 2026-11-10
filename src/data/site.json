@@ -5,8 +5,20 @@
   "foundingYear": 2015,
   "email": "info@relbiz.net",
   "phones": [
-    { "label": "PL", "number": "+48 504 272 343", "tel": "+48504272343", "languages": "Polish · Russian · English", "title": "Poland · EU office" },
-    { "label": "BY", "number": "+375 33 33-44-303", "tel": "+375333344303", "languages": "Russian · English · Belarusian", "title": "Belarus" }
+    {
+      "label": "PL",
+      "number": "+48 504 272 343",
+      "tel": "+48504272343",
+      "languages": "Polish · Russian · English",
+      "title": "Poland · EU office"
+    },
+    {
+      "label": "BY",
+      "number": "+375 33 33-44-303",
+      "tel": "+375333344303",
+      "languages": "Russian · English · Belarusian",
+      "title": "Belarus"
+    }
   ],
   "office": {
     "street": "Zamkowa 1a",
@@ -32,6 +44,6 @@
     "yandexMetrika": ""
   },
   "forms": {
-    "web3formsKey": ""
+    "web3formsKey": "3f43a40e-8008-4fa3-b656-9e0b138ea3a6"
   }
 }
