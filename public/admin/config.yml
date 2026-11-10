@@ -5,7 +5,7 @@ backend:
   name: github
   repo: relbiznet/relbiz-site
   branch: main
-  base_url: https://relbiz-site.pages.dev   # change to https://relbiz.net after the domain is switched
+  base_url: https://relbiz.net
   auth_endpoint: oauth/auth
   commit_messages:
     create: 'Create {{collection}} “{{slug}}”'
