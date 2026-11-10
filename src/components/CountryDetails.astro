@@ -1,4 +1,5 @@
 ---
+import { img } from '../lib/img';
 import type { CollectionEntry } from 'astro:content';
 interface Props { country: CollectionEntry<'countries'>; headingLevel?: 'h1' | 'h2'; showLinks?: boolean }
 const { country, headingLevel = 'h2', showLinks = false } = Astro.props;
@@ -23,7 +24,7 @@ const host = (u: string) => u.replace(/^https?:\/\//, '').replace(/^www\./, '').
   <div class="stack" style="margin-top: 14px;">
     {d.associations.map((a) => (
       <div class="assoc">
-        {a.logo && <img class="assoc__logo" src={a.logo} alt={`${a.name} logo`} loading="lazy" />}
+        {a.logo && <img class="assoc__logo" src={img(a.logo)} alt={`${a.name} logo`} loading="lazy" />}
         <div class="assoc__name">{a.name}</div>
         {a.role && <div style="margin-top: 6px;"><span class="tag tag--yellow">{a.role}</span></div>}
         {a.website && <a href={a.website} target="_blank" rel="noopener" style="display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600;">{host(a.website)} ↗</a>}

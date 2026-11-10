@@ -1,4 +1,5 @@
 ---
+import { img } from '../../lib/img';
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
@@ -51,7 +52,7 @@ const btn = d.button?.url ? d.button : null;
           </div>
         </div>
         {d.image ? (
-          <img src={d.image} alt={d.imageAlt ?? ''} style="flex: 1 1 440px; width: 100%; height: 440px; object-fit: cover; border-radius: 28px;" width="2000" height="1333" fetchpriority="high" />
+          <img src={img(d.image)} alt={d.imageAlt ?? ''} style="flex: 1 1 440px; width: 100%; height: 440px; object-fit: cover; border-radius: 28px;" width="2000" height="1333" fetchpriority="high" />
         ) : (
           <div class="card" style="flex: 1 1 360px; display: flex; flex-direction: column; gap: 14px;">
             <span class="icon-box icon-box--blue"><Icon name={d.icon} /></span>

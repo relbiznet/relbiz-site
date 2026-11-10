@@ -1,4 +1,5 @@
 ---
+import { img } from '../lib/img';
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
@@ -203,7 +204,7 @@ const steps = [
       <div class="grid grid--300">
         {news.map((n) => (
           <article class="news-card">
-            {n.data.image && <img class="news-card__img" src={n.data.image} alt={n.data.imageAlt ?? ''} loading="lazy" width="1000" height="667" />}
+            {n.data.image && <img class="news-card__img" src={img(n.data.image)} alt={n.data.imageAlt ?? ''} loading="lazy" width="1000" height="667" />}
             <div class="news-card__body">
               {n.data.tag && <span class="tag" style="align-self: flex-start;">{n.data.tag}</span>}
               <h3 class="news-card__title"><a href={`/news/${n.id}/`}>{n.data.title}</a></h3>

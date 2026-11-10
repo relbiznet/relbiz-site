@@ -1,4 +1,5 @@
 ---
+import { img } from '../../lib/img';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import site from '../../data/site.json';
@@ -33,7 +34,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
 
       {featured && (
         <article class="news-feature" style="margin-top: 24px;" data-category={featured.data.category}>
-          {featured.data.image && <img class="news-feature__img" src={featured.data.image} alt={featured.data.imageAlt ?? ''} width="2000" height="1333" />}
+          {featured.data.image && <img class="news-feature__img" src={img(featured.data.image)} alt={featured.data.imageAlt ?? ''} width="2000" height="1333" />}
           <div class="news-feature__body">
             <div class="meta">
               <span class="tag tag--yellow">Featured</span>
@@ -51,7 +52,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
       <div class="grid grid--300" style="margin-top: 20px;">
         {rest.map((n) => (
           <article class="news-card" data-category={n.data.category}>
-            {n.data.image && <img class="news-card__img" src={n.data.image} alt={n.data.imageAlt ?? ''} loading="lazy" width="1000" height="667" style="height: 240px;" />}
+            {n.data.image && <img class="news-card__img" src={img(n.data.image)} alt={n.data.imageAlt ?? ''} loading="lazy" width="1000" height="667" style="height: 240px;" />}
             <div class="news-card__body">
               <div class="meta">
                 {n.data.tag && <span class="tag">{n.data.tag}</span>}
