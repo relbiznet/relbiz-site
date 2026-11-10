@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+const updated = '10 November 2026';
+---
+<Base
+  title="Privacy and cookie policy"
+  description="How RelBiz.NET processes personal data and uses cookies."
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Privacy and cookie policy', url: '/privacy/' }]}
+>
+  <section class="page-head" style="padding-bottom: var(--section);">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumbs"><a href="/">Home</a>  /  <span aria-current="page">Privacy and cookie policy</span></nav>
+      <h1 class="h1" style="font-size: clamp(32px, 4vw, 50px);">Privacy and cookie policy</h1>
+      <p class="muted" style="margin-top: 14px;">Last updated: {updated}</p>
+      <div class="prose" style="margin-top: 32px;">
+        <h2>1. Who is responsible for your data</h2>
+        <p>The controller of personal data collected on relbiz.net is <strong>{site.legal.name}</strong>, UNP {site.legal.unp}, {site.legal.address}. Data protection officer: {site.legal.dpo}. For any question about your personal data, write to <a href={`mailto:${site.legal.privacyEmail}`}>{site.legal.privacyEmail}</a>.</p>
+        <p>We process personal data in accordance with the EU General Data Protection Regulation (GDPR) when we deal with people in the European Union, and with the Law of the Republic of Belarus “On Personal Data Protection”.</p>
+
+        <h2>2. What data we collect and why</h2>
+        <ul>
+          <li><strong>Request forms.</strong> When you send a form we receive your name, e-mail, phone number (optional), preferred way of contact, the topic and text of your message, and the page you sent it from. We use this data only to answer your request and to prepare an offer. Legal basis: steps taken at your request before entering into a contract (Art. 6(1)(b) GDPR) and our legitimate interest in answering business inquiries (Art. 6(1)(f) GDPR).</li>
+          <li><strong>E-mail and messengers.</strong> If you write to us by e-mail, WhatsApp, Telegram or Viber, we process your contact details and the content of the conversation for the same purpose.</li>
+          <li><strong>Website analytics.</strong> With your consent only, we use Google Analytics 4 and Yandex Metrica to understand how visitors use the site (pages viewed, approximate location, device and browser). Legal basis: your consent (Art. 6(1)(a) GDPR), which you can withdraw at any time via “Cookie settings” at the bottom of every page.</li>
+          <li><strong>Technical data.</strong> Our hosting provider processes IP addresses and technical request data to deliver the website and protect it from attacks. Legal basis: legitimate interest (Art. 6(1)(f) GDPR).</li>
+        </ul>
+        <p>We do not sell personal data and do not use it for automated decision-making.</p>
+
+        <h2>3. Who processes data on our behalf</h2>
+        <ul>
+          <li><strong>Cloudflare, Inc.</strong> — website hosting and security.</li>
+          <li><strong>Web3Forms</strong> — delivery of form submissions to our mailbox.</li>
+          <li><strong>Google Ireland Ltd / Google LLC</strong> — Google Analytics (only after consent) and Google Maps (only when you click “Show map” on the Contacts page).</li>
+          <li><strong>YANDEX LLC</strong> — Yandex Metrica (only after consent). Data may be processed in the Russian Federation, a country for which the European Commission has not adopted an adequacy decision; the transfer takes place on the basis of your explicit consent (Art. 49(1)(a) GDPR).</li>
+        </ul>
+        <p>Some of these providers may process data outside the European Economic Area. Where required, such transfers rely on the European Commission’s standard contractual clauses or on your consent.</p>
+        <p>When we introduce you to a partner company or association at your request, we share with them only the contact details and information needed for the introduction.</p>
+
+        <h2>4. How long we keep data</h2>
+        <p>We keep requests and correspondence for as long as needed to handle them and for up to three years afterwards for follow-up, unless a longer period is required by law (for example, for contracts and accounting records). Analytics data is kept according to the settings of the analytics services, no longer than 26 months.</p>
+
+        <h2>5. Your rights</h2>
+        <p>You have the right to access your data, to have it corrected or deleted, to restrict or object to its processing, to data portability and to withdraw your consent at any time. To exercise these rights, write to <a href={`mailto:${site.legal.privacyEmail}`}>{site.legal.privacyEmail}</a>. You also have the right to lodge a complaint with a data protection supervisory authority, in particular in the EU country where you live or work.</p>
+
+        <h2>6. Cookies</h2>
+        <p>Essential functions of the site work without cookies. We store your cookie choice in your browser’s local storage (<code>rb-consent</code>). Analytics cookies are set only if you click “Accept analytics”:</p>
+        <ul>
+          <li><code>_ga</code>, <code>_ga_*</code> — Google Analytics, distinguishing visitors and sessions, up to 2 years;</li>
+          <li><code>_ym_uid</code>, <code>_ym_d</code>, <code>_ym_isad</code> and other <code>_ym_*</code> cookies — Yandex Metrica, distinguishing visitors and sessions, up to 1 year.</li>
+        </ul>
+        <p>You can change your choice at any time via <strong>Cookie settings</strong> in the footer, and delete cookies in your browser settings.</p>
+
+        <h2>7. Changes to this policy</h2>
+        <p>We may update this policy when our services or the law change. The date of the latest version is shown at the top of this page.</p>
+      </div>
+    </div>
+  </section>
+</Base>

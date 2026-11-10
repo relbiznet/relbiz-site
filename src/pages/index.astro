@@ -1,0 +1,250 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import ContactForm from '../components/ContactForm.astro';
+import site from '../data/site.json';
+
+const services = (await getCollection('services', (s) => !s.data.draft)).sort((a, b) => a.data.order - b.data.order);
+// Home page shows 8 key services
+const homeOrder = ['business-matchmaking', 'partner-verification', 'market-entry-support', 'mice-events', 'exhibitions-abroad', 'office-accounting', 'recruitment-new-office', 'international-marketing'];
+const homeServices = homeOrder.map((id) => services.find((s) => s.id === id)).filter(Boolean);
+
+const countries = await getCollection('countries');
+const regions = ['European Union', 'Eastern Partnership', 'Africa'].map((r) => ({
+  name: r,
+  items: countries.filter((c) => c.data.region === r).sort((a, b) => a.data.name.localeCompare(b.data.name)),
+}));
+
+const news = (await getCollection('news', (n) => !n.data.draft)).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
+
+const founders = [
+  { logo: '/images/logo-buee.png', name: 'Business Union of Entrepreneurs and Employers named after Prof. Kuniavski (BUEE)', country: 'Belarus · site administrator', url: '/countries/belarus/' },
+  { logo: '/images/logo-evea.png', name: 'Estonian Association of SMEs (EVEA)', country: 'Estonia', url: '/countries/estonia/' },
+  { logo: '/images/logo-malta-smes.png', name: 'The Malta Chamber of SMEs (formerly GRTU)', country: 'Malta', url: '/countries/malta/' },
+];
+const partners = [
+  ['GSMEA · Georgia', 'georgia'], ['SME Cooperation Association · Armenia', 'armenia'], ['CCI Moldova', 'moldova'], ['CCI Bacău · Romania', 'romania'],
+  ['Šiauliai CCI · Lithuania', 'lithuania'], ['NECA · Nigeria', 'nigeria'], ['PSF · Rwanda', 'rwanda'], ['GICAM · Cameroon', 'cameroon'], ['MEDS · Senegal', 'senegal'],
+];
+const steps = [
+  { title: 'Tell us your goal', short: 'Your goal', text: 'Which market, which kind of partner, what volumes and timeline. A short brief is enough to start.' },
+  { title: 'We search through associations', short: 'Search', text: 'We approach partner associations and chambers in the target country and shortlist member companies that fit your brief.' },
+  { title: 'Verified introduction', short: 'Introduction', text: 'Before you meet, the association confirms the company is a member in good standing and shares an independent reference.' },
+  { title: 'Negotiation and market entry', short: 'Deal', text: 'We support first meetings, contracts and the practical steps of entering the market — and stay on hand afterwards.' },
+];
+---
+<Base title="RelBiz.NET — Trusted partners across borders" description={site.description} showTopbar>
+  <!-- HERO -->
+  <section class="hero" id="about">
+    <div class="wrap">
+      <div class="hero__text">
+        <span class="badge-line"><span class="dot"></span>Built within the EU programme East Invest 2 · since {site.foundingYear}</span>
+        <h1 class="h1">Trusted partners across borders — introduced by their own associations.</h1>
+        <p class="lead">We work only with companies that are members of industry and professional unions. Every new contact comes with an independent recommendation — and less risk in your first deal.</p>
+        <div class="btn-row">
+          <a class="btn btn--blue" href="#contact">Find a partner</a>
+          <a class="btn btn--line" href="/countries/">See 19 countries</a>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <img src="/images/hero-meeting.webp" srcset="/images/hero-meeting-1000.webp 1000w, /images/hero-meeting.webp 2000w" sizes="(max-width: 900px) 100vw, 560px" alt="Business partners talking in a meeting room" fetchpriority="high" width="2000" height="1125" />
+        <div class="float-card float-card--white">
+          <div style="font-size: 16px; font-weight: 700;">Partner profile</div>
+          <div class="muted" style="font-size: 13px;">Food producer · Tbilisi, Georgia</div>
+          <ul class="check-list">
+            <li><Icon name="check" size={18} />Member of a national SME association</li>
+            <li><Icon name="check" size={18} />Association reference available</li>
+            <li><Icon name="check" size={18} />Looking for EU distributors</li>
+          </ul>
+        </div>
+        <div class="float-card float-card--navy">
+          <div class="float-card__big">1,000+</div>
+          <div style="font-size: 14px; line-height: 1.5; color: var(--on-navy); margin-top: 4px;">companies in the network across 19 countries</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EAST INVEST 2 + FOUNDERS -->
+  <section class="section section--white" style="padding-block: clamp(48px, 6vw, 80px);">
+    <div class="wrap">
+      <div class="trust">
+        <div class="trust__logo">
+          <img src="/images/east-invest-2.jpg" alt="East Invest 2 — EU programme logo" width="280" height="80" loading="lazy" />
+          <span class="label-caps" style="font-size: 12px;">EU4Business · funded by the European Union</span>
+        </div>
+        <div class="trust__text">
+          <h2 class="h2" style="font-size: clamp(26px, 2.8vw, 36px);">Built under the umbrella of a European programme</h2>
+          <p class="text" style="font-size: 17px; line-height: 1.7; margin: 16px 0 0; max-width: 680px;">RelBiz.NET was launched in {site.foundingYear} by three national SME associations from Belarus, Estonia and Malta within East Invest 2 — an EU4Business project funded by the European Union to strengthen business associations and SMEs and to build lasting trade and investment links between EU companies and their partners abroad.</p>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 48px;">
+        <div class="stat"><div class="stat__num">{site.foundingYear}</div><div class="stat__label">Network launched</div></div>
+        <div class="stat"><div class="stat__num">{countries.length}</div><div class="stat__label">Partner countries</div></div>
+        <div class="stat"><div class="stat__num">1,000+</div><div class="stat__label">Companies in the network</div></div>
+        <div class="stat"><div class="stat__num">3</div><div class="stat__label">Regions: EU, Eastern Partnership, Africa</div></div>
+      </div>
+      <div style="margin-top: 40px;">
+        <div class="label-caps">Founded by</div>
+        <div class="grid" style="margin-top: 14px;">
+          {founders.map((f) => (
+            <a class="card founder" href={f.url}>
+              <div class="founder__logo"><img src={f.logo} alt={`${f.name} logo`} loading="lazy" /></div>
+              <div>
+                <div style="font-size: 16px; font-weight: 700; line-height: 1.35;">{f.name}</div>
+                <div class="muted" style="margin-top: 4px; font-size: 14px; font-weight: 600;">{f.country}</div>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div class="label-caps" style="margin-top: 32px;">Partner associations in other countries</div>
+        <div class="pill-row" style="margin-top: 14px; gap: 10px;">
+          {partners.map(([label, slug]) => <a class="chip" href={`/countries/${slug}/`}>{label}</a>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY DIFFERENCE -->
+  <section class="section" id="join">
+    <div class="wrap split">
+      <img class="split__img" src="/images/networking.webp" srcset="/images/networking-1000.webp 1000w, /images/networking.webp 2000w" sizes="(max-width: 900px) 100vw, 560px" alt="Business people networking at an association event" loading="lazy" width="2000" height="1333" style="object-position: 60% 40%;" />
+      <div>
+        <p class="eyebrow">Our key difference</p>
+        <h2 class="h2">We work only with members of business associations</h2>
+        <p class="text" style="font-size: 17px; line-height: 1.7; margin: 20px 0 0;">Finding a company online is easy. Knowing whether you can trust it is the hard part. Every company we introduce belongs to an industry or professional union, chamber or association — and that association can give you an honest, independent recommendation before you sign anything.</p>
+        <div class="stack" style="margin-top: 28px;">
+          <div class="num-card"><span class="num">1</span><div><div class="num-card__title">Independent recommendations</div><div class="num-card__text">References come from the partner’s own association — not from the partner, and not from us.</div></div></div>
+          <div class="num-card"><span class="num">2</span><div><div class="num-card__title">Lower risk in new deals</div><div class="num-card__text">Association members have a reputation to protect, which makes first contracts with them safer.</div></div></div>
+          <div class="num-card"><span class="num">3</span><div><div class="num-card__title">Introductions through networks</div><div class="num-card__text">SME unions, chambers of commerce and industry bodies open doors that cold outreach cannot.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section section--white" id="services">
+    <div class="wrap">
+      <div class="head-row">
+        <div>
+          <p class="eyebrow">What we provide</p>
+          <h2 class="h2">Meet new clients. Enter new markets.</h2>
+        </div>
+        <div class="head-row__aside">
+          <p class="text" style="margin: 0 0 16px; font-size: 17px;">From the first partner search to events, recruitment and accounting for your office abroad.</p>
+          <a class="btn btn--line" href="/services/">All services and offers →</a>
+        </div>
+      </div>
+      <div class="grid">
+        {homeServices.map((s) => s && (
+          <a class="svc" href={`/services/${s.id}/`}>
+            <span class="icon-box"><Icon name={s.data.icon} /></span>
+            <h3 class="svc__title">{s.data.title}</h3>
+            <p class="svc__text">{s.data.summary}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2 class="h2" style="max-width: 760px;">From first contact to a signed deal — in four steps</h2>
+      <div class="tabs" role="tablist" aria-label="Steps">
+        {steps.map((s, i) => (
+          <button type="button" class="tab" role="tab" id={`step-tab-${i}`} aria-controls="step-panel" aria-selected={i === 0 ? 'true' : 'false'} data-step={i}><span class="tab__n">0{i + 1}</span>{s.short}</button>
+        ))}
+      </div>
+      <div class="tab-panel" id="step-panel" role="tabpanel" aria-labelledby="step-tab-0">
+        <div class="tab-panel__text">
+          <div class="big-num" data-step-num>01</div>
+          <h3 class="h3" style="font-size: 24px; margin-top: 20px;" data-step-title>{steps[0].title}</h3>
+          <p class="text" style="font-size: 17px; line-height: 1.7; margin: 14px 0 0;" data-step-text>{steps[0].text}</p>
+        </div>
+        <img class="tab-panel__img" src="/images/handshake.webp" srcset="/images/handshake-1000.webp 1000w, /images/handshake.webp 2000w" sizes="(max-width: 900px) 100vw, 520px" alt="Partners shaking hands over a signed contract" loading="lazy" width="2000" height="1333" style="object-position: 50% 35%;" />
+      </div>
+    </div>
+  </section>
+
+  <!-- REGIONS -->
+  <section class="section section--navy">
+    <div class="wrap">
+      <div class="head-row" style="align-items: flex-end;">
+        <div>
+          <p class="eyebrow">Where we work</p>
+          <h2 class="h2">Partner associations in {countries.length} countries</h2>
+        </div>
+        <a class="btn btn--white" href="/countries/">All countries &amp; associations →</a>
+      </div>
+      <div class="grid grid--300">
+        {regions.map((r) => (
+          <div class="region">
+            <div class="region__head"><h3 class="h3" style="font-size: 19px; font-weight: 700;">{r.name}</h3><span class="region__count">{r.items.length}</span></div>
+            <div class="region__chips">{r.items.map((c) => <a href={`/countries/${c.id}/`}>{c.data.name}</a>)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="head-row">
+        <div>
+          <p class="eyebrow">News &amp; offers</p>
+          <h2 class="h2">Latest from RelBiz.NET</h2>
+        </div>
+        <a class="btn btn--line" href="/news/">All news →</a>
+      </div>
+      <div class="grid grid--300">
+        {news.map((n) => (
+          <article class="news-card">
+            {n.data.image && <img class="news-card__img" src={n.data.image} alt={n.data.imageAlt ?? ''} loading="lazy" width="1000" height="667" />}
+            <div class="news-card__body">
+              {n.data.tag && <span class="tag" style="align-self: flex-start;">{n.data.tag}</span>}
+              <h3 class="news-card__title"><a href={`/news/${n.id}/`}>{n.data.title}</a></h3>
+              <p class="news-card__text">{n.data.summary}</p>
+              <a class="link-arrow" href={`/news/${n.id}/`}>Read more →</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" style="padding: 0 var(--pad) var(--section);">
+    <div class="contact-split" style="max-width: var(--wrap); margin: 0 auto;">
+      <div class="contact-split__side">
+        <h2 class="h2" style="font-size: clamp(28px, 3vw, 36px);">Ask a question</h2>
+        <p>Tell us which market and which partner you are looking for. We answer in English, Polish, Russian and Belarusian.</p>
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 8px; font-size: 16px;">
+          {site.phones.map((p) => <a href={`tel:${p.tel}`}>{p.number} <small>· {p.languages}</small></a>)}
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          <small>WhatsApp · Telegram · Viber on both numbers</small>
+        </div>
+      </div>
+      <ContactForm id="home-form" title="Your request" />
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ steps }}>
+    (function () {
+      var tabs = document.querySelectorAll('[data-step]');
+      var num = document.querySelector('[data-step-num]'), title = document.querySelector('[data-step-title]'), text = document.querySelector('[data-step-text]');
+      var panel = document.getElementById('step-panel');
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          var i = Number(t.dataset.step);
+          tabs.forEach(function (x) { x.setAttribute('aria-selected', x === t ? 'true' : 'false'); });
+          num.textContent = '0' + (i + 1); title.textContent = steps[i].title; text.textContent = steps[i].text;
+          panel.setAttribute('aria-labelledby', t.id);
+        });
+      });
+    })();
+  </script>
+</Base>

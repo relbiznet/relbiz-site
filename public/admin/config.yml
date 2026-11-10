@@ -1,0 +1,243 @@
+# RelBiz.NET content admin (Sveltia CMS / Decap CMS format)
+# Open https://relbiz.net/admin/ and sign in with GitHub.
+
+backend:
+  name: github
+  repo: relbiznet/relbiz-site
+  branch: main
+  base_url: https://relbiz-site.pages.dev   # change to https://relbiz.net after the domain is switched
+  auth_endpoint: oauth/auth
+  commit_messages:
+    create: 'Create {{collection}} “{{slug}}”'
+    update: 'Update {{collection}} “{{slug}}”'
+    delete: 'Delete {{collection}} “{{slug}}”'
+    uploadMedia: 'Upload “{{path}}”'
+    deleteMedia: 'Delete “{{path}}”'
+
+site_url: https://relbiz.net
+display_url: https://relbiz.net
+logo_url: /favicon.svg
+locale: en
+
+media_folder: public/uploads
+public_folder: /uploads
+
+# Reusable field groups
+_seo: &seo
+  label: SEO (optional)
+  name: seo
+  widget: object
+  collapsed: true
+  required: false
+  fields:
+    - { label: 'Title for Google (leave empty to use the page title)', name: title, widget: string, required: false }
+    - { label: 'Description for Google (150–160 characters)', name: description, widget: text, required: false }
+    - { label: Keywords, name: keywords, widget: string, required: false }
+    - { label: 'Image for social networks (1200×630; leave empty for an automatic one)', name: image, widget: image, required: false }
+    - { label: 'Hide from search engines', name: noindex, widget: boolean, default: false, required: false }
+
+_button: &button
+  label: Button with a link (optional)
+  name: button
+  widget: object
+  collapsed: true
+  required: false
+  fields:
+    - { label: Button text, name: label, widget: string, required: false }
+    - { label: 'Link (https://… for external sites, /contacts/ for our pages, mailto:… for e-mail)', name: url, widget: string, required: false }
+
+collections:
+  - name: news
+    label: News
+    label_singular: News item
+    folder: src/content/news
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    sortable_fields: [date, title]
+    summary: '{{title}} — {{date | date("YYYY-MM-DD")}}'
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD' }
+      - { label: Show date on the site, name: showDate, widget: boolean, default: true }
+      - { label: Category, name: category, widget: select, options: ['Offers', 'Services', 'Tools', 'Network news', 'Events'], default: 'Network news' }
+      - { label: 'Label (e.g. “Offer · Tourism”)', name: tag, widget: string, required: false }
+      - { label: Short summary (for cards and Google), name: summary, widget: text }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image description (for accessibility), name: imageAlt, widget: string, required: false }
+      - { label: Featured (shown large at the top of News), name: featured, widget: boolean, default: false }
+      - { label: 'Note (e.g. offer period)', name: note, widget: string, required: false }
+      - *button
+      - { label: Draft (not published), name: draft, widget: boolean, default: false }
+      - *seo
+      - { label: Text, name: body, widget: markdown }
+
+  - name: services
+    label: Services
+    label_singular: Service
+    folder: src/content/services
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    sortable_fields: [order, title]
+    summary: '{{order}}. {{title}} ({{category}})'
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Category, name: category, widget: select, options: ['Events & MICE', 'Representation office', 'People & HR', 'Market entry', 'Marketing', 'Compliance'] }
+      - label: Icon
+        name: icon
+        widget: select
+        default: match
+        options:
+          - { label: Calendar (events), value: mice }
+          - { label: Exhibition stand, value: expo }
+          - { label: Route (missions), value: mission }
+          - { label: Ledger (accounting), value: accounting }
+          - { label: Building (office), value: office }
+          - { label: People (HR), value: people }
+          - { label: Link (matchmaking), value: match }
+          - { label: Shield (verification), value: verify }
+          - { label: Arrow in (market entry), value: entry }
+          - { label: Document check (compliance), value: comply }
+          - { label: Megaphone (marketing), value: marketing }
+          - { label: Paper plane (distribution), value: send }
+          - { label: Globe, value: globe }
+      - { label: Badge, name: badge, widget: select, options: ['', 'New', 'Special offer'], default: '', required: false }
+      - { label: Order in the list (1 = first), name: order, widget: number, value_type: int, default: 100 }
+      - { label: Short summary (for cards and Google), name: summary, widget: text }
+      - { label: Key points (shown on the card), name: points, widget: list, field: { label: Point, name: point, widget: string } }
+      - { label: Price, name: price, widget: string, default: 'Price on request' }
+      - { label: Request form type, name: formType, widget: select, options: [{ label: General, value: general }, { label: Event (dates, participants), value: event }], default: general }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image description, name: imageAlt, widget: string, required: false }
+      - label: Key facts (optional)
+        name: facts
+        widget: list
+        required: false
+        fields:
+          - { label: Label, name: label, widget: string }
+          - { label: Value, name: value, widget: string }
+      - label: What’s included (optional)
+        name: included
+        widget: list
+        required: false
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Text, name: text, widget: text, required: false }
+      - label: How we work — steps (optional)
+        name: steps
+        widget: list
+        required: false
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Text, name: text, widget: text, required: false }
+      - label: Why with RelBiz.NET (optional)
+        name: why
+        widget: list
+        required: false
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Text, name: text, widget: text, required: false }
+      - *button
+      - { label: Draft (not published), name: draft, widget: boolean, default: false }
+      - *seo
+      - { label: Introduction text, name: body, widget: markdown }
+
+  - name: countries
+    label: Countries
+    label_singular: Country
+    folder: src/content/countries
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    identifier_field: name
+    summary: '{{name}} ({{region}})'
+    sortable_fields: [name, region]
+    fields:
+      - { label: Country, name: name, widget: string }
+      - { label: Region, name: region, widget: select, options: ['European Union', 'Eastern Partnership', 'Africa'] }
+      - { label: Capital, name: capital, widget: string, required: false }
+      - { label: Currency, name: currency, widget: string, required: false }
+      - { label: Short description, name: summary, widget: text }
+      - label: Partner associations
+        name: associations
+        widget: list
+        required: false
+        hint: 'Leave empty to show “partner association is being confirmed”.'
+        fields:
+          - { label: Name, name: name, widget: string }
+          - { label: 'Role (e.g. “RelBiz.NET representative”)', name: role, widget: string, required: false }
+          - { label: Website (https://…), name: website, widget: string, required: false }
+          - { label: 'Contact person, phone, e-mail', name: contact, widget: string, required: false }
+          - { label: Logo, name: logo, widget: image, required: false }
+      - label: Useful links for doing business
+        name: links
+        widget: list
+        required: false
+        fields:
+          - { label: Link text, name: label, widget: string }
+          - { label: URL, name: url, widget: string }
+      - *seo
+
+  - name: settings
+    label: Site settings
+    editor: { preview: false }
+    files:
+      - name: site
+        label: Contacts, social networks and analytics
+        file: src/data/site.json
+        format: json
+        fields:
+          - { label: Site name, name: name, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: Default description for Google, name: description, widget: text }
+          - { label: Founding year, name: foundingYear, widget: number, value_type: int }
+          - { label: E-mail, name: email, widget: string }
+          - label: Phones
+            name: phones
+            widget: list
+            fields:
+              - { label: Short label (PL, BY), name: label, widget: string }
+              - { label: Number as shown, name: number, widget: string }
+              - { label: 'Number for dialling (+48…)', name: tel, widget: string }
+              - { label: Languages, name: languages, widget: string }
+              - { label: Card title, name: title, widget: string }
+          - label: Office
+            name: office
+            widget: object
+            fields:
+              - { label: Street, name: street, widget: string }
+              - { label: City, name: city, widget: string }
+              - { label: Postal code, name: postalCode, widget: string }
+              - { label: Country, name: country, widget: string }
+              - { label: Google Maps link, name: mapsUrl, widget: string }
+          - label: Legal details
+            name: legal
+            widget: object
+            fields:
+              - { label: Company name, name: name, widget: string }
+              - { label: UNP, name: unp, widget: string }
+              - { label: Legal address, name: address, widget: string }
+              - { label: Data protection officer, name: dpo, widget: string }
+              - { label: E-mail for privacy requests, name: privacyEmail, widget: string }
+          - label: Social networks
+            name: social
+            widget: object
+            fields:
+              - { label: LinkedIn, name: linkedin, widget: string }
+              - { label: Facebook, name: facebook, widget: string }
+              - { label: Instagram, name: instagram, widget: string }
+          - label: Analytics
+            name: analytics
+            widget: object
+            fields:
+              - { label: 'Google Analytics 4 Measurement ID (G-…)', name: ga4, widget: string, required: false }
+              - { label: Yandex Metrica counter number, name: yandexMetrika, widget: string, required: false }
+          - label: Forms
+            name: forms
+            widget: object
+            fields:
+              - { label: Web3Forms access key, name: web3formsKey, widget: string, required: false }

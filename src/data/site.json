@@ -1,0 +1,37 @@
+{
+  "name": "RelBiz.NET",
+  "tagline": "Reliable Business",
+  "description": "Trusted partners across borders — introduced by their own business associations. B2B matchmaking, market entry, MICE events and representation services in 19 countries since 2015.",
+  "foundingYear": 2015,
+  "email": "info@relbiz.net",
+  "phones": [
+    { "label": "PL", "number": "+48 504 272 343", "tel": "+48504272343", "languages": "Polish · Russian · English", "title": "Poland · EU office" },
+    { "label": "BY", "number": "+375 33 33-44-303", "tel": "+375333344303", "languages": "Russian · English · Belarusian", "title": "Belarus" }
+  ],
+  "office": {
+    "street": "Zamkowa 1a",
+    "city": "Biała Podlaska",
+    "postalCode": "21-500",
+    "country": "Poland",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Zamkowa+1a,+21-500+Bia%C5%82a+Podlaska,+Poland"
+  },
+  "legal": {
+    "name": "RelBiz LLC (ООО «RelBiz»)",
+    "unp": "191274785",
+    "address": "9 Pobediteley Ave., Minsk, Belarus",
+    "dpo": "Alexey Kolb",
+    "privacyEmail": "info@relbiz.net"
+  },
+  "social": {
+    "linkedin": "https://www.linkedin.com/company/relbiz/",
+    "facebook": "http://www.facebook.com/relbiznet",
+    "instagram": "https://www.instagram.com/relbiz_net/"
+  },
+  "analytics": {
+    "ga4": "G-6NYS6QXHC9",
+    "yandexMetrika": ""
+  },
+  "forms": {
+    "web3formsKey": ""
+  }
+}

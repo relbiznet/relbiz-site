@@ -1,0 +1,95 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import site from '../../data/site.json';
+
+const news = (await getCollection('news', (n) => !n.data.draft)).sort((a, b) => +b.data.date - +a.data.date);
+const featured = news.find((n) => n.data.featured) ?? news[0];
+const rest = news.filter((n) => n !== featured);
+const categories = [...new Set(news.map((n) => n.data.category))];
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base
+  title="News, offers and opportunities"
+  description="News from the RelBiz.NET network, special offers and practical tools for international business."
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'News', url: '/news/' }]}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumbs"><a href="/">Home</a>  /  <span aria-current="page">News</span></nav>
+      <h1 class="h1">News, offers and opportunities</h1>
+      <p class="lead">Updates from our network, special offers and practical tools for international business.</p>
+    </div>
+  </section>
+
+  <section style="padding-block: 36px var(--section);">
+    <div class="wrap">
+      {categories.length > 1 && (
+        <div class="pill-row" role="group" aria-label="Filter news">
+          <button type="button" class="pill" aria-pressed="true" data-filter="all">All</button>
+          {categories.map((c) => <button type="button" class="pill" aria-pressed="false" data-filter={c}>{c}</button>)}
+        </div>
+      )}
+
+      {featured && (
+        <article class="news-feature" style="margin-top: 24px;" data-category={featured.data.category}>
+          {featured.data.image && <img class="news-feature__img" src={featured.data.image} alt={featured.data.imageAlt ?? ''} width="2000" height="1333" />}
+          <div class="news-feature__body">
+            <div class="meta">
+              <span class="tag tag--yellow">Featured</span>
+              {featured.data.tag && <span class="tag">{featured.data.tag}</span>}
+              {featured.data.showDate && <time datetime={featured.data.date.toISOString()}>{fmt(featured.data.date)}</time>}
+              {featured.data.note && <span>{featured.data.note}</span>}
+            </div>
+            <h2 class="h2" style="font-size: clamp(24px, 2.6vw, 32px);"><a href={`/news/${featured.id}/`} style="color: inherit; text-decoration: none;">{featured.data.title}</a></h2>
+            <p class="text" style="margin: 0; font-size: 16px; line-height: 1.7;">{featured.data.summary}</p>
+            <a class="btn btn--blue" href={`/news/${featured.id}/`} style="align-self: flex-start; margin-top: 6px;">Read the article</a>
+          </div>
+        </article>
+      )}
+
+      <div class="grid grid--300" style="margin-top: 20px;">
+        {rest.map((n) => (
+          <article class="news-card" data-category={n.data.category}>
+            {n.data.image && <img class="news-card__img" src={n.data.image} alt={n.data.imageAlt ?? ''} loading="lazy" width="1000" height="667" style="height: 240px;" />}
+            <div class="news-card__body">
+              <div class="meta">
+                {n.data.tag && <span class="tag">{n.data.tag}</span>}
+                {n.data.showDate && <time datetime={n.data.date.toISOString()}>{fmt(n.data.date)}</time>}
+              </div>
+              <h2 class="news-card__title" style="font-size: 21px;"><a href={`/news/${n.id}/`}>{n.data.title}</a></h2>
+              <p class="news-card__text">{n.data.summary}</p>
+              <a class="link-arrow" href={`/news/${n.id}/`}>Read more →</a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="card" style="margin-top: 56px; border-radius: var(--radius-lg); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;">
+        <div style="flex: 1 1 420px;">
+          <h2 class="h3" style="font-size: 24px;">Follow RelBiz.NET</h2>
+          <p class="text" style="margin: 8px 0 0;">New articles, offers and partner news appear first on our social channels.</p>
+        </div>
+        <div class="pill-row">
+          <a class="btn btn--line btn--sm" href={site.social.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn btn--line btn--sm" href={site.social.facebook} target="_blank" rel="noopener">Facebook ↗</a>
+          <a class="btn btn--line btn--sm" href={site.social.instagram} target="_blank" rel="noopener">Instagram ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var pills = document.querySelectorAll('[data-filter]');
+      var items = document.querySelectorAll('[data-category]');
+      pills.forEach(function (p) {
+        p.addEventListener('click', function () {
+          var f = p.dataset.filter;
+          pills.forEach(function (x) { x.setAttribute('aria-pressed', x === p ? 'true' : 'false'); });
+          items.forEach(function (i) { i.hidden = !(f === 'all' || i.dataset.category === f); });
+        });
+      });
+    })();
+  </script>
+</Base>

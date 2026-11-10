@@ -1,0 +1,51 @@
+---
+import site from '../data/site.json';
+interface Props { id?: string; title?: string; topic?: string; variant?: 'general' | 'event'; subject?: string; heading?: boolean }
+const { id = 'form', title = 'Ask a question', topic = '', variant = 'general', subject = 'New request from relbiz.net', heading = true } = Astro.props;
+const topics = [
+  'Find a partner abroad',
+  'Market entry to the EU',
+  'MICE event or exhibition',
+  'Accounting for an office abroad',
+  'Recruitment',
+  'Marketing services',
+  'Join as a partner association',
+  'Other',
+];
+const allTopics = topic && !topics.includes(topic) ? [topic, ...topics] : topics;
+const key = site.forms.web3formsKey;
+---
+<form class="form js-form" data-key={key} data-fallback={site.email} novalidate aria-labelledby={heading ? `${id}-title` : undefined} aria-label={heading ? undefined : title}>
+  {heading && <h2 id={`${id}-title`} class="h2" style="font-size: clamp(26px, 3vw, 34px);">{title}</h2>}
+  <input type="hidden" name="subject" value={subject} />
+  <input type="hidden" name="from_name" value="RelBiz.NET website" />
+  <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <div class="form-grid">
+    <div class="field"><label for={`${id}-name`}>Name</label><input id={`${id}-name`} name="name" type="text" autocomplete="name" placeholder="Enter name" required /></div>
+    <div class="field"><label for={`${id}-email`}>E-mail</label><input id={`${id}-email`} name="email" type="email" autocomplete="email" placeholder="Enter e-mail" required /></div>
+    <div class="field"><label for={`${id}-phone`}>Phone number</label><input id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" placeholder="Enter phone number" /></div>
+  </div>
+  {variant === 'event' ? (
+    <div class="form-grid">
+      <div class="field"><label for={`${id}-type`}>Event type</label>
+        <select id={`${id}-type`} name="event_type"><option value="">Select option</option><option>Business meeting</option><option>Incentive trip</option><option>Conference</option><option>Exhibition</option><option>Business mission</option></select></div>
+      <div class="field"><label for={`${id}-country`}>Country</label><input id={`${id}-country`} name="country" type="text" placeholder="Where?" /></div>
+      <div class="field"><label for={`${id}-dates`}>Dates</label><input id={`${id}-dates`} name="dates" type="text" placeholder="Approximate dates" /></div>
+      <div class="field"><label for={`${id}-people`}>Participants</label><input id={`${id}-people`} name="participants" type="number" min="1" placeholder="Number of people" /></div>
+    </div>
+  ) : (
+    <div class="form-grid">
+      <div class="field"><label for={`${id}-way`}>Best way to contact you</label>
+        <select id={`${id}-way`} name="contact_method"><option value="">Select option</option><option>E-mail</option><option>WhatsApp</option><option>Telegram</option><option>Viber</option><option>Phone call</option></select></div>
+      <div class="field"><label for={`${id}-topic`}>Topic of your question</label>
+        <select id={`${id}-topic`} name="topic"><option value="">Select option</option>{allTopics.map((t) => <option selected={t === topic}>{t}</option>)}</select></div>
+    </div>
+  )}
+  <div class="field"><label for={`${id}-msg`}>{variant === 'event' ? 'Goals and wishes' : 'Your question'}</label>
+    <textarea id={`${id}-msg`} name="message" rows="4" placeholder={variant === 'event' ? 'What should the event achieve? Who would you like to meet?' : 'Write down your question...'} required></textarea></div>
+  <p class="form-consent">By sending this form you agree to the processing of your data as described in our <a href="/privacy/">privacy policy</a>.</p>
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+    <button type="submit" class="btn btn--blue">Send</button>
+    <p class="form-status" role="status" aria-live="polite"></p>
+  </div>
+</form>

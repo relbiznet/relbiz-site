@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+
+const services = (await getCollection('services', (s) => !s.data.draft)).sort((a, b) => a.data.order - b.data.order);
+const categories = ['Events & MICE', 'Representation office', 'People & HR', 'Market entry', 'Marketing', 'Compliance'].filter((c) => services.some((s) => s.data.category === c));
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: `https://relbiz.net/services/${s.id}/`, name: s.data.title })),
+};
+---
+<Base
+  title="Services and offers for international business"
+  description="MICE events, exhibitions abroad, accounting and recruitment for your office abroad, business matchmaking, partner verification and market-entry support — through business associations in 19 countries."
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }]}
+  jsonLd={[itemList]}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumbs"><a href="/">Home</a>  /  <span aria-current="page">Services</span></nav>
+      <div class="head-row" style="margin-bottom: 0;">
+        <div>
+          <h1 class="h1">Services and offers for international business</h1>
+          <p class="lead">From the first partner search to running your office abroad. Every service is delivered with partner associations and vetted local specialists.</p>
+        </div>
+        <a class="btn btn--blue" href="/contacts/#form">Request an offer</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-block: 40px var(--section);">
+    <div class="wrap">
+      <div class="pill-row" role="group" aria-label="Filter by category">
+        <button type="button" class="pill" aria-pressed="true" data-filter="all">All services <span class="count">{services.length}</span></button>
+        {categories.map((c) => (
+          <button type="button" class="pill" aria-pressed="false" data-filter={c}>{c} <span class="count">{services.filter((s) => s.data.category === c).length}</span></button>
+        ))}
+      </div>
+
+      <div class="grid grid--340" style="margin-top: 28px;">
+        {services.map((s) => (
+          <article class="svc-card" data-category={s.data.category}>
+            <div class="svc-card__top">
+              <span class="icon-box icon-box--blue"><Icon name={s.data.icon} /></span>
+              <div class="svc-card__tags">
+                {s.data.badge && <span class="tag tag--yellow">{s.data.badge}</span>}
+                <span class="tag">{s.data.category}</span>
+              </div>
+            </div>
+            <h2 class="svc-card__title"><a href={`/services/${s.id}/`}>{s.data.title}</a></h2>
+            <p class="text" style="margin: 0; font-size: 15px;">{s.data.summary}</p>
+            <ul class="check-list">
+              {s.data.points.map((p) => <li><Icon name="check" size={18} />{p}</li>)}
+            </ul>
+            <div class="svc-card__foot">
+              <span class="muted" style="font-size: 14px; font-weight: 600;">{s.data.price}</span>
+              <a class="link-arrow" href={`/services/${s.id}/`} aria-label={`Details: ${s.data.title}`}>Details →</a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="band" style="margin-top: 56px;">
+        <div>
+          <p class="eyebrow">Not on the list?</p>
+          <h2>Tell us the task — we will find the right people</h2>
+          <p>Our partner associations in 19 countries help us assemble a team for almost any business task abroad.</p>
+        </div>
+        <a class="btn btn--white" href="/contacts/#form">Describe your task</a>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var pills = document.querySelectorAll('[data-filter]');
+      var cards = document.querySelectorAll('[data-category]');
+      pills.forEach(function (p) {
+        p.addEventListener('click', function () {
+          var f = p.dataset.filter;
+          pills.forEach(function (x) { x.setAttribute('aria-pressed', x === p ? 'true' : 'false'); });
+          cards.forEach(function (c) { c.hidden = !(f === 'all' || c.dataset.category === f); });
+        });
+      });
+    })();
+  </script>
+</Base>

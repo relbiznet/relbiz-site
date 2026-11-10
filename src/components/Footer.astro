@@ -1,0 +1,42 @@
+---
+import site from '../data/site.json';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="/images/relbiz-logo-white.svg" alt="RelBiz.NET — Reliable Business" width="205" height="48" loading="lazy" />
+        <p style="margin: 20px 0 0; line-height: 1.7;">Trusted partners across borders — introduced by their own business associations. Since {site.foundingYear}.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <strong>Pages</strong>
+          <a href="/#about">About</a>
+          <a href="/services/">Services</a>
+          <a href="/countries/">Countries</a>
+          <a href="/news/">News</a>
+        </div>
+        <div class="footer__col">
+          <strong>Contact</strong>
+          {site.phones.map((p) => <a href={`tel:${p.tel}`}>{p.number}</a>)}
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          <span>{site.office.street}, {site.office.postalCode} {site.office.city}, {site.office.country}</span>
+        </div>
+        <div class="footer__col">
+          <strong>Follow</strong>
+          <a href={site.social.linkedin} rel="noopener" target="_blank">LinkedIn ↗</a>
+          <a href={site.social.facebook} rel="noopener" target="_blank">Facebook ↗</a>
+          <a href={site.social.instagram} rel="noopener" target="_blank">Instagram ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© {site.foundingYear}–{year} RelBiz.NET · {site.legal.name}, UNP {site.legal.unp} · Developed within the EU programme East Invest 2</span>
+      <span style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <a href="/privacy/">Privacy &amp; cookies</a>
+        <button type="button" data-cookie-settings style="background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; text-decoration: underline;">Cookie settings</button>
+      </span>
+    </div>
+  </div>
+</footer>

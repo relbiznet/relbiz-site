@@ -1,0 +1,43 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { country: CollectionEntry<'countries'>; headingLevel?: 'h1' | 'h2'; showLinks?: boolean }
+const { country, headingLevel = 'h2', showLinks = false } = Astro.props;
+const d = country.data;
+const H = headingLevel;
+const host = (u: string) => u.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+---
+<div>
+  <span class="tag">{d.region}</span>
+  <H class={headingLevel === 'h1' ? 'h1' : 'h2'} style={headingLevel === 'h1' ? 'margin-top: 14px;' : 'margin-top: 14px; font-size: 34px;'}>{d.name}</H>
+  <p class="text" style="margin: 12px 0 0; font-size: 16px; line-height: 1.65;">{d.summary}</p>
+</div>
+<div class="facts">
+  <div class="fact"><div class="fact__label">Capital</div><div class="fact__value">{d.capital ?? '—'}</div></div>
+  <div class="fact"><div class="fact__label">Currency</div><div class="fact__value">{d.currency ?? '—'}</div></div>
+</div>
+<div>
+  <h3 style="margin: 0; font-size: 15px; font-weight: 800;">Partner associations</h3>
+  {d.associations.length === 0 && (
+    <p class="note">Our partner association in {d.name} is being confirmed. In the meantime we can arrange introductions through our network — just ask.</p>
+  )}
+  <div class="stack" style="margin-top: 14px;">
+    {d.associations.map((a) => (
+      <div class="assoc">
+        {a.logo && <img class="assoc__logo" src={a.logo} alt={`${a.name} logo`} loading="lazy" />}
+        <div class="assoc__name">{a.name}</div>
+        {a.role && <div style="margin-top: 6px;"><span class="tag tag--yellow">{a.role}</span></div>}
+        {a.website && <a href={a.website} target="_blank" rel="noopener" style="display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600;">{host(a.website)} ↗</a>}
+        {a.contact && <div class="assoc__contact">{a.contact}</div>}
+      </div>
+    ))}
+  </div>
+</div>
+{showLinks && d.links.length > 0 && (
+  <div>
+    <h3 style="margin: 0; font-size: 15px; font-weight: 800;">Useful links for doing business</h3>
+    <ul style="margin: 12px 0 0; padding-left: 18px; font-size: 15px; line-height: 1.8;">
+      {d.links.map((l) => <li><a href={l.url} target="_blank" rel="noopener">{l.label}</a></li>)}
+    </ul>
+  </div>
+)}
+<a class="btn btn--blue" href={`/contacts/?topic=${encodeURIComponent('Find a partner abroad')}#form`}>Request an introduction</a>

@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import site from '../data/site.json';
+const mapQuery = encodeURIComponent(`${site.office.street}, ${site.office.postalCode} ${site.office.city}, ${site.office.country}`);
+---
+<Base
+  title="Contacts — we are ready to help in your language"
+  description="Contact RelBiz.NET: +48 504 272 343 (PL/RU/EN), +375 33 33-44-303 (RU/EN/BY), info@relbiz.net. WhatsApp, Telegram and Viber on both numbers."
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Contacts', url: '/contacts/' }]}
+>
+  <section class="page-head" style="padding-bottom: 64px;">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumbs"><a href="/">Home</a>  /  <span aria-current="page">Contacts</span></nav>
+      <h1 class="h1">We are ready to help — in your language</h1>
+      <p class="lead">Call, write in a messenger or send an e-mail. We speak English, Polish, Russian and Belarusian.</p>
+
+      <div class="grid grid--300" style="margin-top: 44px;">
+        {site.phones.map((p) => (
+          <div class="contact-card">
+            <span class="tag" style="align-self: flex-start;">{p.title}</span>
+            <a class="contact-card__big" href={`tel:${p.tel}`}>{p.number}</a>
+            <span class="muted" style="font-size: 14px; font-weight: 600;">{p.languages}</span>
+            <div class="pill-row" style="margin-top: 4px;">
+              <a class="msg-chip" href={`https://wa.me/${p.tel.replace('+', '')}`} target="_blank" rel="noopener">WhatsApp</a>
+              <a class="msg-chip" href={`https://t.me/${p.tel}`} target="_blank" rel="noopener">Telegram</a>
+              <a class="msg-chip" href={`viber://chat?number=${encodeURIComponent(p.tel)}`}>Viber</a>
+            </div>
+          </div>
+        ))}
+        <div class="contact-card contact-card--navy">
+          <span class="tag tag--yellow" style="align-self: flex-start;">E-mail &amp; address</span>
+          <a class="contact-card__big" href={`mailto:${site.email}`}>{site.email}</a>
+          <p style="margin: 0; font-size: 15px; line-height: 1.7; color: var(--on-navy);">{site.office.street}<br />{site.office.postalCode} {site.office.city}, {site.office.country}</p>
+          <div class="pill-row" style="gap: 14px 22px; font-size: 15px; font-weight: 700;">
+            <a href={site.social.linkedin} target="_blank" rel="noopener" style="color: #fff;">LinkedIn ↗</a>
+            <a href={site.social.facebook} target="_blank" rel="noopener" style="color: #fff;">Facebook ↗</a>
+            <a href={site.social.instagram} target="_blank" rel="noopener" style="color: #fff;">Instagram ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="form" style="padding-bottom: var(--section);">
+    <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;">
+      <div class="card" style="flex: 999 1 560px; border-radius: var(--radius-lg); padding: clamp(28px, 4vw, 44px);">
+        <ContactForm id="contact-form" title="Ask a question" />
+      </div>
+      <div class="map-box" id="map">
+        <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 14px;">
+          <p class="text" style="margin: 0; font-weight: 600;">{site.office.street}, {site.office.city}</p>
+          <button type="button" class="btn btn--blue btn--sm" data-load-map={`https://maps.google.com/maps?q=${mapQuery}&z=15&output=embed`}>Show map</button>
+          <a href={site.office.mapsUrl} target="_blank" rel="noopener" style="font-size: 14px; font-weight: 600;">Open in Google Maps ↗</a>
+          <p class="muted" style="margin: 0; font-size: 12px; max-width: 260px;">The map is loaded from Google only after you click “Show map”.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    document.querySelectorAll('[data-load-map]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var box = document.getElementById('map');
+        var f = document.createElement('iframe');
+        f.src = b.dataset.loadMap; f.title = 'Office location map'; f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade';
+        box.innerHTML = ''; box.appendChild(f);
+      });
+    });
+  </script>
+</Base>

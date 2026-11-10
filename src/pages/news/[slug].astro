@@ -1,0 +1,71 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { isExternal } from '../../lib/links';
+
+export async function getStaticPaths() {
+  const news = await getCollection('news', (n) => !n.data.draft);
+  return news.map((n) => ({ params: { slug: n.id }, props: { entry: n, all: news } }));
+}
+const { entry, all } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const fmt = (x: Date) => x.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const more = all.filter((n) => n.id !== entry.id).sort((a, b) => +b.data.date - +a.data.date).slice(0, 2);
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: d.title,
+  description: d.summary,
+  datePublished: d.date.toISOString(),
+  image: d.image ? [`https://relbiz.net${d.image}`] : undefined,
+  author: { '@type': 'Organization', name: 'RelBiz.NET', url: 'https://relbiz.net/' },
+  publisher: { '@id': 'https://relbiz.net/#organization' },
+  mainEntityOfPage: `https://relbiz.net/news/${entry.id}/`,
+};
+const btn = d.button?.url ? d.button : null;
+---
+<Base
+  title={d.seo?.title ?? d.title}
+  description={d.seo?.description ?? d.summary}
+  keywords={d.seo?.keywords}
+  image={d.seo?.image}
+  noindex={d.seo?.noindex}
+  type="article"
+  published={d.date}
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'News', url: '/news/' }, { name: d.title, url: `/news/${entry.id}/` }]}
+  jsonLd={[articleLd]}
+>
+  <article class="page-head" style="padding-bottom: var(--section);">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumbs"><a href="/">Home</a>  /  <a href="/news/">News</a>  /  <span aria-current="page">{d.title}</span></nav>
+      <div class="meta">
+        {d.tag && <span class="tag">{d.tag}</span>}
+        {d.showDate && <time datetime={d.date.toISOString()}>{fmt(d.date)}</time>}
+        {d.note && <span>{d.note}</span>}
+      </div>
+      <h1 class="h1" style="margin-top: 18px; max-width: 900px; font-size: clamp(32px, 4vw, 50px);">{d.title}</h1>
+      <p class="lead" style="max-width: 760px;">{d.summary}</p>
+      {d.image && <img class="article-hero" src={d.image} alt={d.imageAlt ?? ''} width="2000" height="1333" fetchpriority="high" />}
+      <div class="prose"><Content /></div>
+      {btn && (
+        <a class="btn btn--blue" href={btn.url} target={isExternal(btn.url) ? '_blank' : undefined} rel={isExternal(btn.url) ? 'noopener' : undefined} style="margin-top: 12px;">{btn.label ?? 'Learn more'}</a>
+      )}
+
+      {more.length > 0 && (
+        <div style="margin-top: 72px; border-top: 1px solid var(--line); padding-top: 40px;">
+          <h2 class="h3" style="font-size: 24px;">More news</h2>
+          <div class="grid grid--300" style="margin-top: 24px;">
+            {more.map((n) => (
+              <a class="card" href={`/news/${n.id}/`} style="display: flex; flex-direction: column; gap: 8px;">
+                {n.data.tag && <span class="tag" style="align-self: flex-start;">{n.data.tag}</span>}
+                <span style="font-size: 18px; font-weight: 800; line-height: 1.35;">{n.data.title}</span>
+                <span class="text" style="font-size: 15px;">{n.data.summary}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </article>
+</Base>

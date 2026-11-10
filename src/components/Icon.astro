@@ -1,0 +1,24 @@
+---
+// Stroke icons used for services. The `name` values are selectable in the admin panel.
+interface Props { name: string; size?: number; color?: string }
+const { name, size = 24, color = '#1F4FBF' } = Astro.props;
+const paths: Record<string, string> = {
+  mice: 'M4 7a2 2 0 012-2h12a2 2 0 012 2v13H4zM4 10h16M9 3v4M15 3v4',
+  expo: 'M3 20h18M5 20V9h14v11M8 9V5h8v4M9 14h6',
+  mission: 'M3 12h4l3-8 4 16 3-8h4',
+  accounting: 'M6 3h12v18H6zM9 7h6M9 11h6M9 15h2M13 15h2',
+  office: 'M4 20h16M6 20V9l6-5 6 5v11M10 20v-5h4v5',
+  people: 'M9 11a3 3 0 100-6 3 3 0 000 6zM3 20c0-3 3-5 6-5s6 2 6 5M16 11a3 3 0 100-6M21 20c0-2.5-1.8-4.3-4-4.9',
+  match: 'M4 12a3 3 0 106 0 3 3 0 10-6 0M14 12a3 3 0 106 0 3 3 0 10-6 0M10 12h4',
+  verify: 'M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3zM9 12l2 2 4-4',
+  entry: 'M14 4h5v16h-5M4 12h11M11 8l4 4-4 4',
+  comply: 'M7 3h7l4 4v14H7zM14 3v4h4M10 14l2 2 3-4',
+  marketing: 'M4 10v4h3l7 4V6l-7 4H4zM17 9a4 4 0 010 6',
+  send: 'M4 12l16-8-6 16-3-7-7-1z',
+  globe: 'M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18M12 3a9 9 0 100 18 9 9 0 000-18z',
+  check: 'M5 12l5 5L20 7',
+};
+const d = paths[name] ?? paths.match;
+const width = name === 'check' ? 2.2 : 1.8;
+---
+<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} stroke-width={width} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={d} /></svg>

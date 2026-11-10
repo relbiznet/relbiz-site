@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CountryDetails from '../../components/CountryDetails.astro';
+
+const countries = (await getCollection('countries')).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const regions = ['European Union', 'Eastern Partnership', 'Africa'];
+const initial = countries.find((c) => c.id === 'belarus') ?? countries[0];
+---
+<Base
+  title="Partner countries and business associations"
+  description={`RelBiz.NET partner associations in ${countries.length} countries of the European Union, the Eastern Partnership and Africa: SME unions, chambers of commerce and employers’ associations.`}
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Countries', url: '/countries/' }]}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumbs"><a href="/">Home</a>  /  <span aria-current="page">Countries</span></nav>
+      <h1 class="h1" style="max-width: 860px;">Partner countries and business associations</h1>
+      <p class="lead">In every country we work through a national SME union, chamber of commerce or employers’ association that knows its members personally.</p>
+    </div>
+  </section>
+
+  <section style="padding-block: 40px var(--section);">
+    <div class="wrap">
+      <div class="pill-row" role="group" aria-label="Filter by region">
+        <button type="button" class="pill" aria-pressed="true" data-region="all">All countries <span class="count">{countries.length}</span></button>
+        {regions.map((r) => <button type="button" class="pill" aria-pressed="false" data-region={r}>{r} <span class="count">{countries.filter((c) => c.data.region === r).length}</span></button>)}
+      </div>
+
+      <div class="country-layout">
+        <div class="country-grid">
+          {countries.map((c) => (
+            <a class="country-tile" href={`/countries/${c.id}/`} data-country={c.id} data-region-of={c.data.region} aria-pressed={c.id === initial.id ? 'true' : 'false'}>
+              <span class="country-tile__name">{c.data.name}</span>
+              <span class="country-tile__region">{c.data.region}</span>
+            </a>
+          ))}
+        </div>
+        <div class="country-panel" style="padding: 0; border: 0; background: none;" aria-live="polite">
+          {countries.map((c) => (
+            <aside class="country-panel" style="flex: none;" data-panel={c.id} hidden={c.id !== initial.id}>
+              <CountryDetails country={c} />
+              <a class="link-arrow" href={`/countries/${c.id}/`}>Country page and useful links →</a>
+            </aside>
+          ))}
+        </div>
+      </div>
+
+      <div class="band" style="margin-top: 56px;">
+        <div>
+          <p class="eyebrow">For business associations</p>
+          <h2>Your country is not on the list yet?</h2>
+          <p>Partnership is free for associations: a country page, introductions for your members, a news section and ready-made marketing materials.</p>
+        </div>
+        <a class="btn btn--white" href={`/contacts/?topic=${encodeURIComponent('Join as a partner association')}#form`}>Become a partner</a>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var tiles = document.querySelectorAll('[data-country]');
+      var panels = document.querySelectorAll('[data-panel]');
+      var pills = document.querySelectorAll('[data-region]');
+      function show(id) {
+        tiles.forEach(function (t) { t.setAttribute('aria-pressed', t.dataset.country === id ? 'true' : 'false'); });
+        panels.forEach(function (p) { p.hidden = p.dataset.panel !== id; });
+      }
+      tiles.forEach(function (t) {
+        t.addEventListener('click', function (e) {
+          e.preventDefault(); show(t.dataset.country);
+          if (window.innerWidth < 900) document.querySelector('[data-panel="' + t.dataset.country + '"]').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+      pills.forEach(function (p) {
+        p.addEventListener('click', function () {
+          var r = p.dataset.region;
+          pills.forEach(function (x) { x.setAttribute('aria-pressed', x === p ? 'true' : 'false'); });
+          var first = null;
+          tiles.forEach(function (t) { var ok = r === 'all' || t.dataset.regionOf === r; t.hidden = !ok; if (ok && !first) first = t; });
+          var current = document.querySelector('.country-tile[aria-pressed="true"]');
+          if (current && current.hidden && first) show(first.dataset.country);
+        });
+      });
+    })();
+  </script>
+</Base>

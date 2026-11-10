@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CountryDetails from '../../components/CountryDetails.astro';
+
+export async function getStaticPaths() {
+  const countries = await getCollection('countries');
+  return countries.map((c) => ({ params: { slug: c.id }, props: { country: c, all: countries } }));
+}
+const { country, all } = Astro.props;
+const d = country.data;
+const neighbours = all.filter((c) => c.data.region === d.region && c.id !== country.id).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const assocNames = d.associations.map((a) => a.name).join(', ');
+---
+<Base
+  title={d.seo?.title ?? `Business partners in ${d.name} — partner associations`}
+  description={d.seo?.description ?? `${d.summary} ${assocNames ? 'RelBiz.NET partner: ' + assocNames + '.' : ''}`.trim()}
+  keywords={d.seo?.keywords}
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Countries', url: '/countries/' }, { name: d.name, url: `/countries/${country.id}/` }]}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumbs"><a href="/">Home</a>  /  <a href="/countries/">Countries</a>  /  <span aria-current="page">{d.name}</span></nav>
+    </div>
+  </section>
+  <section style="padding-block: 8px var(--section);">
+    <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start;">
+      <div class="country-panel" style="flex: 999 1 560px;">
+        <CountryDetails country={country} headingLevel="h1" showLinks />
+      </div>
+      <aside class="card" style="flex: 1 1 300px; border-radius: var(--radius-lg);">
+        <h2 class="h3" style="font-size: 18px;">Other countries in {d.region}</h2>
+        <div class="pill-row" style="margin-top: 16px;">
+          {neighbours.map((n) => <a class="chip" href={`/countries/${n.id}/`}>{n.data.name}</a>)}
+        </div>
+        <a class="link-arrow" href="/countries/" style="display: inline-block; margin-top: 20px;">All {all.length} countries →</a>
+      </aside>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,136 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { isExternal } from '../../lib/links';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services', (s) => !s.data.draft);
+  return services.map((s) => ({ params: { slug: s.id }, props: { entry: s, all: services } }));
+}
+const { entry, all } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const related = all.filter((s) => s.id !== entry.id && s.data.category === d.category).concat(all.filter((s) => s.id !== entry.id && s.data.category !== d.category)).slice(0, 3);
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: d.title,
+  description: d.summary,
+  serviceType: d.category,
+  provider: { '@id': 'https://relbiz.net/#organization' },
+  areaServed: ['Europe', 'Africa', 'Eastern Partnership countries'],
+  url: `https://relbiz.net/services/${entry.id}/`,
+};
+const btn = d.button?.url ? d.button : null;
+---
+<Base
+  title={d.seo?.title ?? d.title}
+  description={d.seo?.description ?? d.summary}
+  keywords={d.seo?.keywords}
+  image={d.seo?.image}
+  noindex={d.seo?.noindex}
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }, { name: d.title, url: `/services/${entry.id}/` }]}
+  jsonLd={[serviceLd]}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumbs"><a href="/">Home</a>  /  <a href="/services/">Services</a>  /  <span aria-current="page">{d.title}</span></nav>
+      <div class="split" style="gap: 40px 56px;">
+        <div style="flex: 999 1 520px;">
+          <div class="pill-row" style="gap: 8px;">
+            <span class="tag">{d.category}</span>
+            {d.badge && <span class="tag tag--yellow">{d.badge}</span>}
+          </div>
+          <h1 class="h1" style="margin-top: 20px;">{d.title}</h1>
+          <div class="prose" style="margin-top: 20px; font-size: 18px;"><Content /></div>
+          <div class="btn-row" style="margin-top: 12px;">
+            <a class="btn btn--blue" href="#request">Request an offer</a>
+            {btn && <a class="btn btn--line" href={btn.url} target={isExternal(btn.url) ? '_blank' : undefined} rel={isExternal(btn.url) ? 'noopener' : undefined}>{btn.label ?? 'Learn more'}</a>}
+          </div>
+        </div>
+        {d.image ? (
+          <img src={d.image} alt={d.imageAlt ?? ''} style="flex: 1 1 440px; width: 100%; height: 440px; object-fit: cover; border-radius: 28px;" width="2000" height="1333" fetchpriority="high" />
+        ) : (
+          <div class="card" style="flex: 1 1 360px; display: flex; flex-direction: column; gap: 14px;">
+            <span class="icon-box icon-box--blue"><Icon name={d.icon} /></span>
+            <h2 class="h3">What’s included</h2>
+            <ul class="check-list" style="font-size: 16px;">{d.points.map((p) => <li><Icon name="check" size={18} />{p}</li>)}</ul>
+            <div class="muted" style="font-weight: 600; padding-top: 12px; border-top: 1px solid var(--line);">{d.price}</div>
+          </div>
+        )}
+      </div>
+
+      {d.facts.length > 0 && (
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 40px;">
+          {d.facts.map((f) => <div class="card" style="padding: 18px 20px;"><div class="muted" style="font-size: 13px; font-weight: 700;">{f.label}</div><div style="margin-top: 6px; font-size: 16px; font-weight: 700;">{f.value}</div></div>)}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {d.included.length > 0 && (
+    <section style="padding-top: clamp(56px, 7vw, 88px);">
+      <div class="wrap">
+        <p class="eyebrow">What’s included</p>
+        <h2 class="h2">Everything you need — in one pair of hands</h2>
+        <div class="grid grid--300" style="margin-top: 32px; gap: 16px;">
+          {d.included.map((i) => (
+            <div class="card" style="display: flex; gap: 14px; padding: 22px;">
+              <span class="icon-box icon-box--blue" style="width: 36px; height: 36px; border-radius: 10px;"><Icon name="check" size={18} /></span>
+              <div><div style="font-weight: 700;">{i.title}</div>{i.text && <div class="text" style="margin-top: 4px; font-size: 15px; line-height: 1.55;">{i.text}</div>}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {(d.steps.length > 0 || d.why.length > 0) && (
+    <section style="padding-top: clamp(56px, 7vw, 88px);">
+      <div class="wrap" style="display: flex; flex-wrap: wrap; gap: 20px;">
+        {d.steps.length > 0 && (
+          <div class="card" style="flex: 999 1 560px; min-width: 0; border-radius: var(--radius-lg); padding: clamp(24px, 3vw, 36px);">
+            <h2 class="h3" style="font-size: 26px;">How we work</h2>
+            <ol style="margin: 24px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 18px;">
+              {d.steps.map((s, i) => <li style="display: flex; gap: 16px;"><span class="num" style="width: 40px; height: 40px; border-radius: 12px; font-size: 15px;">{i + 1}</span><div><div style="font-size: 17px; font-weight: 700;">{s.title}</div>{s.text && <div class="text" style="margin-top: 4px; font-size: 15px; line-height: 1.55;">{s.text}</div>}</div></li>)}
+            </ol>
+          </div>
+        )}
+        {d.why.length > 0 && (
+          <div style="flex: 1 1 380px; min-width: 0; background: var(--ink); color: #fff; border-radius: var(--radius-lg); padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; gap: 18px;">
+            <h2 class="h3" style="font-size: 26px;">Why with RelBiz.NET</h2>
+            {d.why.map((w) => <div><div style="font-weight: 700;">{w.title}</div>{w.text && <div style="margin-top: 4px; font-size: 15px; line-height: 1.55; color: var(--on-navy);">{w.text}</div>}</div>)}
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  <section id="request" style="padding-top: clamp(56px, 7vw, 88px);">
+    <div class="wrap">
+      <div class="card" style="border-radius: var(--radius-lg); padding: clamp(28px, 4vw, 44px);">
+        <ContactForm id="service-form" title={d.formType === 'event' ? 'Request an offer for your event' : `Request an offer: ${d.title}`} topic={d.title} variant={d.formType} subject={`Service request: ${d.title}`} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: clamp(56px, 7vw, 88px);">
+    <div class="wrap">
+      <div class="head-row" style="margin-bottom: 24px; align-items: center;">
+        <h2 class="h3" style="font-size: 26px;">Related services</h2>
+        <a class="link-arrow" href="/services/">All services →</a>
+      </div>
+      <div class="grid">
+        {related.map((r) => (
+          <a class="card" href={`/services/${r.id}/`} style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="tag" style="align-self: flex-start;">{r.data.category}</span>
+            <span style="font-size: 18px; font-weight: 800;">{r.data.title}</span>
+            <span class="text" style="font-size: 15px; line-height: 1.55;">{r.data.summary}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

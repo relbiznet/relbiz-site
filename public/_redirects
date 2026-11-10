@@ -1,0 +1,13 @@
+# Old Joomla URLs → new pages (301 keeps search rankings)
+/about-the-project/what-we-provide  /services/  301
+/about-the-project/faqs             /#how       301
+/about-the-project/how-to-join      /contacts/  301
+/about-the-project                  /           301
+/news/127-african-tourism-unveiled-your-gateway-to-the-european-market-with-a-75-discount  /news/african-tourism-european-market-75-discount/  301
+/news/126-marketing-services-for-arfican-business  /news/marketing-services-for-african-business/  301
+/news/83-calendly-at-your-service  /news/calendly-automate-scheduling/  301
+/countries/125-angola               /countries/angola/  301
+/index.php                          /           301
+/index.php/*                        /           301
+/component/*                        /           301
+/en/*                               /:splat     301
