@@ -3,6 +3,8 @@ import { img } from '../../lib/img';
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { isExternal } from '../../lib/links';
+import YouTube from '../../components/YouTube.astro';
+import { parseYouTube, youTubeThumb } from '../../lib/youtube.js';
 
 export async function getStaticPaths() {
   const news = await getCollection('news', (n) => !n.data.draft);
@@ -24,6 +26,19 @@ const articleLd = {
   publisher: { '@id': 'https://relbiz.net/#organization' },
   mainEntityOfPage: `https://relbiz.net/news/${entry.id}/`,
 };
+const yt = parseYouTube(d.video);
+const videoLd = yt
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      name: d.title,
+      description: d.summary,
+      thumbnailUrl: [youTubeThumb(yt.id)],
+      uploadDate: d.date.toISOString(),
+      embedUrl: `https://www.youtube-nocookie.com/embed/${yt.id}`,
+      contentUrl: `https://www.youtube.com/watch?v=${yt.id}`,
+    }
+  : null;
 const btn = d.button?.url ? d.button : null;
 ---
 <Base
@@ -35,7 +50,7 @@ const btn = d.button?.url ? d.button : null;
   type="article"
   published={d.date}
   breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'News', url: '/news/' }, { name: d.title, url: `/news/${entry.id}/` }]}
-  jsonLd={[articleLd]}
+  jsonLd={videoLd ? [articleLd, videoLd] : [articleLd]}
 >
   <article class="page-head" style="padding-bottom: var(--section);">
     <div class="wrap">
@@ -48,6 +63,7 @@ const btn = d.button?.url ? d.button : null;
       <h1 class="h1" style="margin-top: 18px; max-width: 900px; font-size: clamp(32px, 4vw, 50px);">{d.title}</h1>
       <p class="lead" style="max-width: 760px;">{d.summary}</p>
       {d.image && <img class="article-hero" src={img(d.image)} alt={d.imageAlt ?? ''} width="2000" height="1333" fetchpriority="high" />}
+      {d.video && <div style="max-width: 900px;"><YouTube url={d.video} title={d.title} /></div>}
       <div class="prose"><Content /></div>
       {btn && (
         <a class="btn btn--blue" href={btn.url} target={isExternal(btn.url) ? '_blank' : undefined} rel={isExternal(btn.url) ? 'noopener' : undefined} style="margin-top: 12px;">{btn.label ?? 'Learn more'}</a>

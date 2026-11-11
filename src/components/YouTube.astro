@@ -1,0 +1,8 @@
+---
+// Player for the "YouTube video" field (see src/lib/youtube.ts).
+import { parseYouTube, youTubeHtml } from '../lib/youtube.js';
+interface Props { url?: string; title?: string }
+const { url, title = 'Video' } = Astro.props;
+const ref = parseYouTube(url);
+---
+{ref && <Fragment set:html={youTubeHtml(ref, title)} />}

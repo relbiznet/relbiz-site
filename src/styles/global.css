@@ -300,3 +300,14 @@ a.chip:hover { border-color: var(--blue); color: var(--blue); }
 .notfound__code { display: flex; align-items: center; gap: clamp(8px, 2vw, 20px); color: var(--blue); font-size: clamp(110px, 16vw, 200px); font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
 
 [hidden] { display: none !important; }
+
+/* YouTube player (loads only after the visitor presses play) */
+.yt { position: relative; aspect-ratio: 16 / 9; width: 100%; border-radius: 18px; overflow: hidden; background: var(--ink); margin: 28px 0; }
+.yt--short { aspect-ratio: 9 / 16; max-width: 360px; }
+.yt iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.yt__play { position: absolute; inset: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px; border: 0; cursor: pointer; font-family: inherit; color: #fff; text-align: center; background: radial-gradient(120% 90% at 50% 40%, var(--navy-3), var(--ink)); }
+.yt__icon { width: 72px; height: 72px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; padding-left: 4px; transition: transform .15s, background .15s; }
+.yt__play:hover .yt__icon, .yt__play:focus-visible .yt__icon { background: var(--blue-dark); transform: scale(1.06); }
+.yt__label { font-size: 17px; font-weight: 700; }
+.yt__note { font-size: 13px; color: var(--on-navy); }
+.prose .yt { max-width: 760px; }

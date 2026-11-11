@@ -184,5 +184,20 @@ const ld = [organization, ...crumbsLd, ...jsonLd];
       });
     });
   </script>
+  <script is:inline>
+    // YouTube players: the iframe is created only after the visitor presses play.
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.yt__play');
+      if (!b) return;
+      var f = document.createElement('iframe');
+      var start = Number(b.dataset.start) || 0;
+      f.src = 'https://www.youtube-nocookie.com/embed/' + b.dataset.yt + '?autoplay=1&rel=0' + (start ? '&start=' + start : '');
+      f.title = b.dataset.title || 'YouTube video';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      b.replaceWith(f);
+    });
+  </script>
 </body>
 </html>

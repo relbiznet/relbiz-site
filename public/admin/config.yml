@@ -66,6 +66,7 @@ collections:
       - { label: Short summary (for cards and Google), name: summary, widget: text }
       - { label: Image, name: image, widget: image, required: false }
       - { label: Image description (for accessibility), name: imageAlt, widget: string, required: false }
+      - { label: 'YouTube video (optional): paste the link, e.g. https://www.youtube.com/watch?v=…', name: video, widget: string, required: false, hint: 'Shown as a player on the page. To put a video inside the text instead, paste its link on a separate line of the text.' }
       - { label: Featured (shown large at the top of News), name: featured, widget: boolean, default: false }
       - { label: 'Note (e.g. offer period)', name: note, widget: string, required: false }
       - *button
@@ -112,6 +113,7 @@ collections:
       - { label: Request form type, name: formType, widget: select, options: [{ label: General, value: general }, { label: Event (dates, participants), value: event }], default: general }
       - { label: Image, name: image, widget: image, required: false }
       - { label: Image description, name: imageAlt, widget: string, required: false }
+      - { label: 'YouTube video (optional): paste the link, e.g. https://www.youtube.com/watch?v=…', name: video, widget: string, required: false, hint: 'Shown as a player on the page. To put a video inside the text instead, paste its link on a separate line of the text.' }
       - label: Key facts (optional)
         name: facts
         widget: list

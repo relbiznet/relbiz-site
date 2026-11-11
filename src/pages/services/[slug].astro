@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import { isExternal } from '../../lib/links';
+import YouTube from '../../components/YouTube.astro';
 
 export async function getStaticPaths() {
   const services = await getCollection('services', (s) => !s.data.draft);
@@ -68,6 +69,7 @@ const btn = d.button?.url ? d.button : null;
           {d.facts.map((f) => <div class="card" style="padding: 18px 20px;"><div class="muted" style="font-size: 13px; font-weight: 700;">{f.label}</div><div style="margin-top: 6px; font-size: 16px; font-weight: 700;">{f.value}</div></div>)}
         </div>
       )}
+      {d.video && <div style="max-width: 900px; margin-top: 40px;"><YouTube url={d.video} title={d.title} /></div>}
     </div>
   </section>
 
