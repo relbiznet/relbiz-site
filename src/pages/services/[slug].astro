@@ -6,6 +6,7 @@ import Icon from '../../components/Icon.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import { isExternal } from '../../lib/links';
 import YouTube from '../../components/YouTube.astro';
+import { coverOgPath } from '../../lib/og';
 
 export async function getStaticPaths() {
   const services = await getCollection('services', (s) => !s.data.draft);
@@ -15,6 +16,9 @@ const { entry, all } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
 const related = all.filter((s) => s.id !== entry.id && s.data.category === d.category).concat(all.filter((s) => s.id !== entry.id && s.data.category !== d.category)).slice(0, 3);
+// Structured data uses the service's own illustration: the 1200×630 crop plus the full image
+const coverCrop = coverOgPath(`/services/${entry.id}/`, d.image);
+const ldImages = [coverCrop, img(d.image)].filter(Boolean).map((u) => new URL(u as string, 'https://relbiz.net').toString());
 const serviceLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
@@ -24,6 +28,7 @@ const serviceLd = {
   provider: { '@id': 'https://relbiz.net/#organization' },
   areaServed: ['Europe', 'Africa', 'Eastern Partnership countries'],
   url: `https://relbiz.net/services/${entry.id}/`,
+  image: ldImages.length ? ldImages : undefined,
 };
 const btn = d.button?.url ? d.button : null;
 ---
@@ -32,6 +37,8 @@ const btn = d.button?.url ? d.button : null;
   description={d.seo?.description ?? d.summary}
   keywords={d.seo?.keywords}
   image={d.seo?.image}
+  cover={d.image}
+  imageAlt={d.imageAlt}
   noindex={d.seo?.noindex}
   breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }, { name: d.title, url: `/services/${entry.id}/` }]}
   jsonLd={[serviceLd]}

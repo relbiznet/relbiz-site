@@ -15,7 +15,7 @@ npm run build    # output in dist/
 ## Structure
 - `src/content/news|services|countries` — content (Markdown with front matter)
 - `src/data/site.json` — contacts, legal details, analytics IDs, form key
-- `src/pages` — page templates; `src/pages/og` generates social sharing images
+- `src/pages` — page templates; `src/pages/og` generates social sharing images: for News and Services with an image, a 1200×630 JPEG crop of that image (`[...route].jpg.ts`), otherwise a text card (`[...route].png.ts`). The SEO field “Image for social networks” overrides both (see `src/lib/og.ts`)
 - `public/_redirects` — 301 redirects from the old Joomla URLs
 - `functions/oauth` — GitHub sign-in for the admin panel (needs `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in Cloudflare Pages → Settings → Variables)
 

@@ -4,13 +4,18 @@ import '../styles/global.css';
 import site from '../data/site.json';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { coverOgPath, ogRoute } from '../lib/og';
 
 interface Crumb { name: string; url: string }
 interface Props {
   title: string;
   description?: string;
   keywords?: string;
+  /** Explicit social image (SEO block). Overrides everything else. */
   image?: string;
+  /** The page's own title illustration (News, Services) — used for sharing when there is no override. */
+  cover?: string;
+  imageAlt?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
   jsonLd?: object[];
@@ -23,6 +28,8 @@ const {
   description = site.description,
   keywords,
   image,
+  cover,
+  imageAlt,
   type = 'website',
   noindex = false,
   jsonLd = [],
@@ -34,8 +41,12 @@ const {
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://relbiz.net';
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const fullTitle = title.includes('RelBiz.NET') ? title : `${title} | RelBiz.NET`;
-const ogPath = '/og' + (Astro.url.pathname === '/' ? '/home' : Astro.url.pathname.replace(/\/$/, '')) + '.png';
-const ogImage = new URL(image ?? ogPath, siteUrl).toString();
+// Sharing image: SEO override → the page's own illustration (1200×630 crop) → generated text card.
+const coverPath = coverOgPath(Astro.url.pathname, cover);
+const ogImage = new URL(image ?? coverPath ?? `/og/${ogRoute(Astro.url.pathname)}.png`, siteUrl).toString();
+const ogSized = !image; // our own images are always 1200×630; an uploaded override may be any size
+const ogType = image ? undefined : coverPath ? 'image/jpeg' : 'image/png';
+const ogAlt = (image || coverPath) && imageAlt ? imageAlt : title;
 
 const organization = {
   '@context': 'https://schema.org',
@@ -90,14 +101,17 @@ const ld = [organization, ...crumbsLd, ...jsonLd];
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
   <meta property="og:image" content={ogImage} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  {ogType && <meta property="og:image:type" content={ogType} />}
+  {ogSized && <meta property="og:image:width" content="1200" />}
+  {ogSized && <meta property="og:image:height" content="630" />}
+  <meta property="og:image:alt" content={ogAlt} />
   <meta property="og:locale" content="en_GB" />
   {published && <meta property="article:published_time" content={published.toISOString()} />}
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={ogAlt} />
 
   {ld.map((item) => <script type="application/ld+json" set:html={JSON.stringify(item)} />)}
 </head>

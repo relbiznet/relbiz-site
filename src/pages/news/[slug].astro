@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import { isExternal } from '../../lib/links';
 import YouTube from '../../components/YouTube.astro';
 import { parseYouTube, youTubeThumb } from '../../lib/youtube.js';
+import { coverOgPath } from '../../lib/og';
 
 export async function getStaticPaths() {
   const news = await getCollection('news', (n) => !n.data.draft);
@@ -15,16 +16,20 @@ const d = entry.data;
 const { Content } = await render(entry);
 const fmt = (x: Date) => x.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const more = all.filter((n) => n.id !== entry.id).sort((a, b) => +b.data.date - +a.data.date).slice(0, 2);
+const pageUrl = `https://relbiz.net/news/${entry.id}/`;
+// Structured data uses the article's own illustration: the 1200×630 crop plus the full image
+const coverCrop = coverOgPath(`/news/${entry.id}/`, d.image);
+const ldImages = [coverCrop, img(d.image)].filter(Boolean).map((u) => new URL(u as string, 'https://relbiz.net').toString());
 const articleLd = {
   '@context': 'https://schema.org',
   '@type': 'NewsArticle',
   headline: d.title,
   description: d.summary,
   datePublished: d.date.toISOString(),
-  image: d.image ? [`https://relbiz.net${d.image}`] : undefined,
+  image: ldImages.length ? ldImages : undefined,
   author: { '@type': 'Organization', name: 'RelBiz.NET', url: 'https://relbiz.net/' },
   publisher: { '@id': 'https://relbiz.net/#organization' },
-  mainEntityOfPage: `https://relbiz.net/news/${entry.id}/`,
+  mainEntityOfPage: pageUrl,
 };
 const yt = parseYouTube(d.video);
 const videoLd = yt
@@ -46,6 +51,8 @@ const btn = d.button?.url ? d.button : null;
   description={d.seo?.description ?? d.summary}
   keywords={d.seo?.keywords}
   image={d.seo?.image}
+  cover={d.image}
+  imageAlt={d.imageAlt}
   noindex={d.seo?.noindex}
   type="article"
   published={d.date}
