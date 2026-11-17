@@ -24,3 +24,16 @@ export const ogRoute = (pathname: string) => (pathname === '/' ? 'home' : pathna
 /** Site-relative URL of the 1200×630 crop of the entry's illustration, or null if there is none. */
 export const coverOgPath = (pathname: string, cover?: string) =>
   coverFile(cover) ? `/og/${ogRoute(pathname)}.jpg` : null;
+
+/** Real pixel size of a site-relative image, so <img> width/height keep its true proportions. */
+export async function imageSize(src?: string, fallback = { width: 2000, height: 1333 }) {
+  const file = coverFile(src);
+  if (!file) return fallback;
+  try {
+    const { default: sharp } = await import('sharp');
+    const m = await sharp(file, { failOn: 'none' }).metadata();
+    return m.width && m.height ? { width: m.width, height: m.height } : fallback;
+  } catch {
+    return fallback;
+  }
+}
