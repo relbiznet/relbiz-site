@@ -1,17 +1,20 @@
 ---
-title: "African tourism unveiled: your gateway to the European market with a 75% discount"
+title: 'African tourism unveiled: your gateway to the European market with a 75% discount'
 date: 2024-12-15
 showDate: false
 category: Offers
 tag: Offer · Tourism
-summary: "A promotional listing for African tour operators, lodges and travel agencies that want to reach European travellers — for $20, a quarter of the standard advertising rate."
+summary: A promotional listing for African tour operators, lodges and travel agencies that want to reach European travellers — for $20, a quarter of the standard advertising rate.
 image: /images/african-tourism.webp
 imageAlt: Zebras in the African savanna at sunrise
-featured: true
-note: "Offer period: 15.12.2024 – 15.01.2025"
+video: ''
+featured: false
+note: 'Offer period: 15.12.2024 – 15.01.2025'
 button:
   label: Ask about the offer
   url: mailto:info@relbiz.net?subject=African%20tourism%20offer
+draft: false
+seo: null
 ---
 
 European travellers are looking for authentic African experiences — safaris, nature lodges, cultural routes. RelBiz.NET helps African tourism businesses reach them through our network of business associations and partners in Europe.
