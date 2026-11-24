@@ -1,19 +1,25 @@
 ---
-title: "Your Mediation Journey: new website for the book and workbook by Dr. Emmy Irobi"
+title: 'Your Mediation Journey: new website for the book and workbook by Dr. Emmy Irobi'
 date: 2026-11-17
 showDate: true
 category: Network news
 tag: News · Mediation
-summary: "A practical guide to mediation written for the people who sit at the table, not for mediators, plus a companion workbook with 30 exercises. Both paperbacks are now presented on their own website."
+summary: A practical guide to mediation written for the people who sit at the table, not for mediators, plus a companion workbook with 30 exercises. Both paperbacks are now presented on their own website.
 image: /images/mediation-journey-website.webp
-imageAlt: "Covers of the book “Your Mediation Journey: How People Grow Through Conflict” and its Companion Workbook by Emmy Irobi, Ph.D."
+imageAlt: 'Covers of the book “Your Mediation Journey: How People Grow Through Conflict” and its Companion Workbook by Emmy Irobi, Ph.D.'
+video: ''
+featured: true
+note: ''
 button:
   label: Visit the book website
   url: https://mfe.relbiz.net/
+draft: false
 seo:
-  title: "Your Mediation Journey by Dr. Emmy Irobi — book and workbook website | RelBiz.NET"
-  description: "A practical guide to mediation for the people who sit at the table, with a companion workbook of 30 exercises. Bulk orders and author talks available."
+  title: Your Mediation Journey by Dr. Emmy Irobi — book and workbook website | RelBiz.NET
+  description: A practical guide to mediation for the people who sit at the table, with a companion workbook of 30 exercises. Bulk orders and author talks available.
   keywords: mediation, conflict resolution, conflict management, negotiation, peacebuilding, mediators, Emmy Irobi, Your Mediation Journey
+  image: ''
+  noindex: false
 ---
 
 **You are not alone.** If you are preparing for mediation, you may feel frightened, angry, exhausted or hopeful. Most books about mediation are written for mediators. *Your Mediation Journey* by Dr. Emmy Irobi is written for the people who actually sit at the table.
